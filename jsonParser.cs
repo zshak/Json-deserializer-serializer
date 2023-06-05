@@ -43,57 +43,6 @@ namespace JsonSerialize
             return res;
         }
 
-        public static Dictionary<string, string> JsonToDict(StringBuilder sb,
-            Dictionary<int, int> bracketPairs, int left, int right)
-        {
-
-            Dictionary<string, string> res = new Dictionary<string, string>();
-            StringBuilder curString = new StringBuilder();
-            Stack<StringBuilder> st = new Stack<StringBuilder>();
-
-            for(int i = left; i < right; i++)
-            {
-
-                if (sb[i] == ',')
-                {
-                    st.Push(curString);
-                    string val = st.Pop().ToString();
-                    string key = st.Pop().ToString();
-                    res[key] = val;
-                    curString = new StringBuilder();
-                    continue;
-                }
-                
-                if (sb[i] == ':')
-                {
-                    st.Push(curString);
-                    curString = new StringBuilder();
-                    continue;
-                }
-                if (sb[i] == '{' || sb[i] == '[')
-                {
-                    curString = (new StringBuilder(sb.ToString().Substring(i, bracketPairs[i] - i + 1)));
-                    i = bracketPairs[i];
-                    continue;
-                }
-                curString.Append(sb[i]);
-            }
-
-            st.Push(curString);
-            while(st.Count > 0)
-            {
-                string val = st.Pop().ToString();
-                 string key = st.Pop().ToString();
-                res[key] = val;
-            };
-            foreach(KeyValuePair<string,string> kv in res)
-            {
-                Console.WriteLine($"Key: {kv.Key}, Value: {kv.Value}");
-            }
-
-            return res;
-        }
-
         public static Dictionary<string, object> toDict(StringBuilder sb, Dictionary<int, int> bracketPairs
             , int left, int right){
 
